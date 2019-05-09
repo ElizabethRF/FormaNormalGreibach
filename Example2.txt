@@ -1,0 +1,4 @@
+S - ? | AA
+A - a | BC | CC 
+B - a | AC 
+C - AA

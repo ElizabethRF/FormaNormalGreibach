@@ -2,17 +2,14 @@ import java.util.ArrayList;
 
 public class Grammar{
 
-    private ArrayList<NonTerminal> nonTerminals; 
-    private ArrayList<Character> terminals; 
+    private ArrayList<NonTerminal> nonTerminals;
     private NonTerminal initialSymbol; 
     private ArrayList<Production> productions; 
     
     public Grammar(){
         nonTerminals = new ArrayList<NonTerminal>(); 
-        terminals = new ArrayList<Character>(); 
-        initialSymbol = new NonTerminal('S',1); 
+        initialSymbol = new NonTerminal('S',0); 
         productions = new ArrayList<Production>(); 
-
     }
 
     public ArrayList<Production> getGrammar(){
@@ -27,7 +24,6 @@ public class Grammar{
         return productions.get(number); 
     }
 
-
     public void addNonTerminal(char id, int index){
         NonTerminal nonTerminal = new NonTerminal(id, index); 
         nonTerminals.add(nonTerminal);
@@ -37,28 +33,18 @@ public class Grammar{
         return nonTerminals; 
     }
 
-    public void addTerminal(char x){
-        if(!terminals.contains(x)){
-            terminals.add(x);
-        }
-        
-    }
-
     @Override
     public String toString(){
-        String grammar = "G = (N,T,S,P)\n\n";
-
+        String grammar = "";
         grammar += nonTerminalsToString(); 
-        grammar += terminalsToString(); 
         grammar += initialToString();
-        
         grammar += productionsToString(); 
         return grammar;
     }
 
 
     public String nonTerminalsToString(){
-        String nTerminals = "N = {"; 
+        String nTerminals = "N = { "; 
         for(int i = 0; i < nonTerminals.size() - 1; i++){
             nTerminals += nonTerminals.get(i).getId(); 
             nTerminals += nonTerminals.get(i).getIndex();
@@ -71,24 +57,14 @@ public class Grammar{
     }
 
 
-    public String terminalsToString(){
-        String term = "T = {"; 
-        for(int i = 0; i < terminals.size() - 1; i++){
-            term += terminals.get(i); 
-            term += " , ";
-        } 
-        term += terminals.get(terminals.size() - 1); 
-        term += " } \n\n";
-        return term; 
-    }
-
     public String initialToString(){
-        String initial = "S " + initialSymbol.getId() + initialSymbol.getIndex() + "\n\n";
+        String initial = nonTerminals.get(0).getId(); 
+        initial += nonTerminals.get(0).getIndex();
         return initial; 
     }
 
     public String productionsToString(){
-        String prod = "P:"; 
+        String prod = "P: \n"; 
         for(int i = 0; i<productions.size(); i++){
             prod += nonTerminals.get(i).getId();
             prod += nonTerminals.get(i).getIndex();
