@@ -11,7 +11,6 @@ public class Word{
         word.add(element); 
     }
 
-
     public ArrayList<Object> getWord(){
         return word;
     }
@@ -21,6 +20,26 @@ public class Word{
             return word.get(number); 
         }
         return "Index out of bounds"; 
+    }
+
+    public ArrayList<Object> removeFirstElement(){
+        word.remove(0); 
+        return word; 
+    }
+
+    public ArrayList<Object> changeElement(Word newPrefix){
+        removeFirstElement(); 
+        word.addAll(0,newPrefix.getWord()); 
+        return word;
+    }
+
+    @Override
+    public String toString(){
+        String x = "";
+        for(int i = 0 ; i<word.size(); i++){
+            x += word.get(i) + " "; 
+        }
+        return x; 
     }
 
 

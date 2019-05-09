@@ -33,6 +33,10 @@ public class Grammar{
         nonTerminals.add(nonTerminal);
     }
 
+    public ArrayList<NonTerminal> getNonTerminals(){
+        return nonTerminals; 
+    }
+
     public void addTerminal(char x){
         if(!terminals.contains(x)){
             terminals.add(x);
@@ -86,7 +90,9 @@ public class Grammar{
     public String productionsToString(){
         String prod = "P:"; 
         for(int i = 0; i<productions.size(); i++){
-            prod += "\n";
+            prod += nonTerminals.get(i).getId();
+            prod += nonTerminals.get(i).getIndex();
+            prod += " -> ";
             ArrayList<Word> words = productions.get(i).getProduction(); 
             for(int j = 0; j < words.size(); j++){
                 ArrayList<Object> letters = words.get(j).getWord(); 
@@ -101,6 +107,7 @@ public class Grammar{
                 }
                 prod += " | ";
             }
+            prod += "\n";
         }
         return prod; 
     }

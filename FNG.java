@@ -10,18 +10,54 @@ import java.util.HashMap;
 
 public class FNG{
     private Grammar grammar; 
+    private HashMap<NonTerminal,Integer> nonTerminalMap; 
 
     public FNG(){
         grammar = new Grammar(); 
+        nonTerminalMap = new HashMap<NonTerminal,Integer>();
+    }
+
+    // Step 1
+    public void setGrammar(HashMap<Character,String> initialGrammar){
+        orderNonTerminals(initialGrammar);
     }
 
     public void orderNonTerminals(HashMap<Character,String> initialGrammar){
         int i  = 0; 
+        grammar.addNonTerminal('S', i);
         for (char key : initialGrammar.keySet()) {
-            grammar.addNonTerminal(key, i+1);
+            if(key != 'S'){
+                grammar.addNonTerminal(key, i+1);
+                addProduction(initialGrammar.get(key));
+            }
             i++;
         }
     }
+
+    public void addProduction(String production){
+        Production newProduction = new Production(); 
+        String[] words = production.split("|"); 
+        for(int i = 0 ; i < words.length; i++){
+            words[i].replace(" ", ""); 
+            Word newWord = new Word(); 
+            for(int j = 0; j<words[i].length(); j++){
+                if(words[i].charAt(j) >= 'A' && words[i].charAt(j) <= 'Z'){
+                    newWord.addElement(nonTerminalMap);
+                }else{
+                    newWord.addElement(words[i].charAt(j));
+                }
+                
+            }
+            
+            newProduction.addWord(newWord);
+        }
+       
+
+        grammar.addProduction(newProduction);
+
+    }
+
+    
 
 
 
