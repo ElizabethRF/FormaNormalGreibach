@@ -19,5 +19,9 @@ public class Production{
         return production.get(number); 
     }
 
+    public Word removeWord(int index){
+        return production.remove(index);
+    }
 
+    
 }
