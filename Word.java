@@ -23,14 +23,5 @@ public class Word{
         return "Index out of bounds"; 
     }
 
-    @Override
-    public String toString(){
-        String x = ""; 
-        for(int i = 0; i<word.size();i++){
-            x += word.get(i);
-        }
-
-        return x;
-    }
 
 }
