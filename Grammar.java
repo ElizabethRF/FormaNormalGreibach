@@ -8,7 +8,7 @@ public class Grammar{
     
     public Grammar(){
         nonTerminals = new ArrayList<NonTerminal>(); 
-        initialSymbol = new NonTerminal('S',0); 
+        initialSymbol = new NonTerminal('S',0);
         productions = new ArrayList<Production>(); 
     }
 
@@ -58,14 +58,14 @@ public class Grammar{
 
 
     public String initialToString(){
-        String initial = nonTerminals.get(0).getId(); 
-        initial += nonTerminals.get(0).getIndex();
+        String initial = "" + nonTerminals.get(0).getId(); 
+        initial += nonTerminals.get(0).getIndex() + "\n\n";
         return initial; 
     }
 
     public String productionsToString(){
         String prod = "P: \n"; 
-        for(int i = 0; i<productions.size(); i++){
+        for(int i = 0; i < productions.size(); i++){
             prod += nonTerminals.get(i).getId();
             prod += nonTerminals.get(i).getIndex();
             prod += " -> ";
@@ -73,11 +73,12 @@ public class Grammar{
             for(int j = 0; j < words.size(); j++){
                 ArrayList<Object> letters = words.get(j).getWord(); 
                 for(int y = 0; y < letters.size(); y++ ){
-                    if(letters.get(y) instanceof String){
+                    if(letters.get(y) instanceof Character){
                         prod += letters.get(y);
-                    }else{
-                        NonTerminal temp = NonTerminal.class.cast(letters.get(y));
-                        prod +=  " '"+ temp.getId(); 
+                    }
+                    else{
+                        NonTerminal temp = nonTerminals.get((Integer)letters.get(y));
+                        prod +=  " '"+ temp.getId();
                         prod +=  temp.getIndex() + "' "; 
                     }
                 }

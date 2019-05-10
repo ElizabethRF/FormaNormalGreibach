@@ -1,4 +1,4 @@
 S - AS
-A - BC | CC | a
-B - CC | b
 C - AB | b
+B - CC | b
+A - BC | CC | a

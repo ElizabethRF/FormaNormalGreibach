@@ -10,55 +10,63 @@ import java.util.HashMap;
 
 public class FNG{
     private Grammar grammar; 
-    private HashMap<NonTerminal,Integer> nonTerminalMap; 
+    //private HashMap<NonTerminal,Integer> nonTerminalMap;
+    private HashMap<Character,Integer> nonTerminalMap;
 
     public FNG(){
         grammar = new Grammar(); 
-        nonTerminalMap = new HashMap<NonTerminal,Integer>();
+        nonTerminalMap = new HashMap<Character,Integer>();
+        //nonTerminalMap = new HashMap<NonTerminal,Integer>();
     }
 
-    // Step 1
-    public void setGrammar(HashMap<Character,String> initialGrammar){
+    public FNG(HashMap<Character,String[]> initialGrammar){
+        grammar = new Grammar();
+        nonTerminalMap = new HashMap<Character,Integer>();
+        //nonTerminalMap = new HashMap<NonTerminal,Integer>();
         orderNonTerminals(initialGrammar);
     }
 
-    public void orderNonTerminals(HashMap<Character,String> initialGrammar){
-        int i  = 0; 
-        grammar.addNonTerminal('S', i);
+    public void orderNonTerminals(HashMap<Character,String[]> initialGrammar){
+        grammar.addNonTerminal('S', 0);
+        nonTerminalMap.put('S', 0);
+        int i  = 1; 
         for (char key : initialGrammar.keySet()) {
             if(key != 'S'){
-                grammar.addNonTerminal(key, i+1);
+                grammar.addNonTerminal(key, i);
+                nonTerminalMap.put(key, i);
+                i++;
+            }
+        }
+        addProduction(initialGrammar.get('S'));
+        for (char key : initialGrammar.keySet()) {
+            if(key != 'S'){
                 addProduction(initialGrammar.get(key));
             }
-            i++;
         }
     }
 
-    public void addProduction(String production){
-        Production newProduction = new Production(); 
-        String[] words = production.split("|"); 
-        for(int i = 0 ; i < words.length; i++){
-            words[i].replace(" ", ""); 
+    public void addProduction(String[] production){
+        Production newProduction = new Production();
+        for(int i = 0 ; i < production.length; i++){
             Word newWord = new Word(); 
-            for(int j = 0; j<words[i].length(); j++){
-                if(words[i].charAt(j) >= 'A' && words[i].charAt(j) <= 'Z'){
-                    newWord.addElement(nonTerminalMap);
-                }else{
-                    newWord.addElement(words[i].charAt(j));
+            for(int j = 0; j < production[i].length(); j++){
+                char nt = production[i].charAt(j);
+                if(nt >= 'A' && nt <= 'Z'){
+                    newWord.addElement(nonTerminalMap.get(nt));
                 }
-                
+                else{
+                    newWord.addElement(nt);
+                }
             }
-            
             newProduction.addWord(newWord);
         }
-       
-
         grammar.addProduction(newProduction);
-
     }
 
     
-
+    public Grammar getGrammar(){
+        return grammar;
+    }
 
 
 
