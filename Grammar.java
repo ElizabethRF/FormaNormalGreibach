@@ -58,7 +58,7 @@ public class Grammar{
 
 
     public String initialToString(){
-        String initial = "" + nonTerminals.get(0).getId(); 
+        String initial = "S: " + nonTerminals.get(0).getId(); 
         initial += nonTerminals.get(0).getIndex() + "\n\n";
         return initial; 
     }
@@ -84,6 +84,7 @@ public class Grammar{
                 }
                 prod += " | ";
             }
+            prod = prod.substring(0, prod.length() - 2); 
             prod += "\n";
         }
         return prod; 
