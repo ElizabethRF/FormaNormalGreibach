@@ -7,6 +7,10 @@ public class Production{
         production = new ArrayList<Word>();
     }
 
+    public Production(ArrayList<Word> words){
+        production = new ArrayList<Word>(); 
+    }
+
     public ArrayList<Word> getProduction(){
         return production; 
     }

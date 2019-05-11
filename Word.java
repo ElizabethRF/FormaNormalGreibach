@@ -1,10 +1,18 @@
 import java.util.ArrayList;
 
-public class Word{
+public class Word {
     private ArrayList<Object> word;
 
     public Word(){
         word = new ArrayList<Object>();
+    }
+
+    public Word(Word oldWord){
+        word = new ArrayList<Object>();
+        ArrayList<Object> old = oldWord.getWord(); 
+        for(int i = 0; i < old.size(); i++){
+            word.add(old.get(i)); 
+        }
     }
 
     public void addElement(Object element){
@@ -33,6 +41,11 @@ public class Word{
         return word;
     }
 
+    public ArrayList<Object> addPrefix(Word newPrefix){
+        word.addAll(0,newPrefix.getWord()); 
+        return word;
+    }
+
     @Override
     public String toString(){
         String x = "";
@@ -41,6 +54,6 @@ public class Word{
         }
         return x; 
     }
-
+  
 
 }

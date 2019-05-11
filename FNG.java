@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /*
@@ -10,23 +11,24 @@ import java.util.HashMap;
 
 public class FNG{
     private Grammar grammar; 
-    //private HashMap<NonTerminal,Integer> nonTerminalMap;
     private HashMap<Character,Integer> nonTerminalMap;
 
     public FNG(){
         grammar = new Grammar(); 
         nonTerminalMap = new HashMap<Character,Integer>();
-        //nonTerminalMap = new HashMap<NonTerminal,Integer>();
     }
 
     public FNG(HashMap<Character,String[]> initialGrammar){
         grammar = new Grammar();
         nonTerminalMap = new HashMap<Character,Integer>();
-        //nonTerminalMap = new HashMap<NonTerminal,Integer>();
         orderNonTerminals(initialGrammar);
+        System.out.println("original grammar");
+        System.out.println(grammar);
+        fngCondition();
     }
 
     public void orderNonTerminals(HashMap<Character,String[]> initialGrammar){
+        // Add non terminals to grammar and store order in FNG 
         grammar.addNonTerminal('S', 0);
         nonTerminalMap.put('S', 0);
         int i  = 1; 
@@ -37,6 +39,8 @@ public class FNG{
                 i++;
             }
         }
+
+        // Add productions in grammar in the position of the non terminal that generates them 
         addProduction(initialGrammar.get('S'));
         for (char key : initialGrammar.keySet()) {
             if(key != 'S'){
@@ -63,15 +67,37 @@ public class FNG{
         grammar.addProduction(newProduction);
     }
 
-    
     public Grammar getGrammar(){
         return grammar;
     }
 
+    public void fngCondition(){
+        for(int i = 0; i < nonTerminalMap.size(); i++){
+            
+            for(int j = 0 ; j < grammar.getProduction(i).getProduction().size();j++ ){
+                // for each non terminal validate i <= j 
+                Object firstElement = grammar.getProduction(i).getWord(j).getElement(0); 
+                if(firstElement instanceof Integer){
+                    if(i > (Integer)firstElement){
+                        System.out.println("Replace first Element i , j , (Integer)firstElement " + i+ " " +j+ " "+(Integer)firstElement ); 
+                        replaceFirstElement(i,j,(Integer)firstElement); 
+                    }
+                }
+                // for each productio 
+            }
+        }
+    }
 
-
-
-
-        
+    public void replaceFirstElement(int nTerminal, int wordIndex, int firstElement){
+        Word alpha = new Word(grammar.getProduction(nTerminal).getWord(wordIndex));
+        alpha.removeFirstElement(); 
+        ArrayList<Word> words = grammar.getProduction(firstElement).getProduction(); 
+        for(int i = 0; i < words.size(); i++){
+            Word newWord = new Word(alpha);
+            newWord.addPrefix(words.get(i)); 
+            grammar.getProduction(nTerminal).addWord(newWord);
+        }
+        grammar.getProduction(nTerminal).removeWord(wordIndex);
+    }
 
 }
