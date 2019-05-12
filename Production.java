@@ -7,8 +7,11 @@ public class Production{
         production = new ArrayList<Word>();
     }
 
-    public Production(ArrayList<Word> words){
+    public Production(Production words){
         production = new ArrayList<Word>(); 
+        for(int i = 0; i < words.getProduction().size(); i++){
+            production.add(words.getProduction().get(i)); 
+        }
     }
 
     public ArrayList<Word> getProduction(){

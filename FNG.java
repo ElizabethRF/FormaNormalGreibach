@@ -11,16 +11,16 @@ import java.util.HashMap;
 
 public class FNG{
     private Grammar grammar; 
-    private HashMap<Character,Integer> nonTerminalMap;
+    private HashMap<Character,Integer> entryNonTerminalMap;
 
     public FNG(){
         grammar = new Grammar(); 
-        nonTerminalMap = new HashMap<Character,Integer>();
+        entryNonTerminalMap = new HashMap<Character,Integer>();
     }
 
     public FNG(HashMap<Character,String[]> initialGrammar){
         grammar = new Grammar();
-        nonTerminalMap = new HashMap<Character,Integer>();
+        entryNonTerminalMap = new HashMap<Character,Integer>();
         orderNonTerminals(initialGrammar);
         System.out.println("original grammar");
         System.out.println(grammar);
@@ -30,12 +30,12 @@ public class FNG{
     public void orderNonTerminals(HashMap<Character,String[]> initialGrammar){
         // Add non terminals to grammar and store order in FNG 
         grammar.addNonTerminal('S', 0);
-        nonTerminalMap.put('S', 0);
+        entryNonTerminalMap.put('S', 0);
         int i  = 1; 
         for (char key : initialGrammar.keySet()) {
             if(key != 'S'){
                 grammar.addNonTerminal(key, i);
-                nonTerminalMap.put(key, i);
+                entryNonTerminalMap.put(key, i);
                 i++;
             }
         }
@@ -56,7 +56,7 @@ public class FNG{
             for(int j = 0; j < production[i].length(); j++){
                 char nt = production[i].charAt(j);
                 if(nt >= 'A' && nt <= 'Z'){
-                    newWord.addElement(nonTerminalMap.get(nt));
+                    newWord.addElement(entryNonTerminalMap.get(nt));
                 }
                 else{
                     newWord.addElement(nt);
@@ -72,19 +72,30 @@ public class FNG{
     }
 
     public void fngCondition(){
-        for(int i = 0; i < nonTerminalMap.size(); i++){
-            
+        for(int i = 0; i < grammar.getNonTerminals().size(); i++){
+            System.out.println("Evaluation of non terminal ");
+            // for each non terminal validate i <= j 
             for(int j = 0 ; j < grammar.getProduction(i).getProduction().size();j++ ){
-                // for each non terminal validate i <= j 
+                System.out.println("next index of word to evaluate " + j);
                 Object firstElement = grammar.getProduction(i).getWord(j).getElement(0); 
                 if(firstElement instanceof Integer){
                     if(i > (Integer)firstElement){
                         System.out.println("Replace first Element i , j , (Integer)firstElement " + i+ " " +j+ " "+(Integer)firstElement ); 
-                        replaceFirstElement(i,j,(Integer)firstElement); 
+                        replaceFirstElement(i,j,(Integer)firstElement);
+                        j--; // if there is a replacement, we should evaluate the same index
+                        
                     }
                 }
-                // for each productio 
             }
+            /*
+            System.out.println("\n\n\nevaluation of nonterminal " + i);
+            System.out.println("new grammar  before deleting recursion");
+            System.out.println(grammar);
+            //For each non terminal delete left recursion 
+            System.out.println("Delete recursion"); */
+            deleteLeftRecursion(i);
+            /*System.out.println("new grammar ");
+            System.out.println(grammar);*/
         }
     }
 
@@ -98,6 +109,71 @@ public class FNG{
             grammar.getProduction(nTerminal).addWord(newWord);
         }
         grammar.getProduction(nTerminal).removeWord(wordIndex);
+        System.out.println("\nremove word at index" + wordIndex);
+    }
+
+    public void deleteLeftRecursion(int nTerminal){
+        Production[] wordGroups = identifyRecursion(nTerminal);
+        if(wordGroups[1].getProduction().size() > 0){
+            int newIndex = addNonTerminal(wordGroups[0], wordGroups[1]);
+            alterPreviousProduction(nTerminal,wordGroups[0], newIndex); 
+        }
+    }
+
+    public Production[] identifyRecursion(int nTerminal){
+        Production nonRecursive = new Production(); 
+        Production recursive = new Production();
+        for(int i = 0 ; i < grammar.getProduction(nTerminal).getProduction().size(); i++ ){
+            Word currentWord =  new Word(grammar.getProduction(nTerminal).getWord(i)); 
+            Object firstElement = currentWord.getElement(0); 
+            if(firstElement instanceof Integer){
+                if(nTerminal == (Integer)firstElement){
+                    currentWord.removeFirstElement(); 
+                    recursive.addWord(currentWord);
+                }
+                else{
+                    nonRecursive.addWord(currentWord);
+                }
+            }else{
+                nonRecursive.addWord(currentWord);
+            }
+        }
+        Production[] result = {nonRecursive, recursive}; 
+        return result; 
+    }
+
+    public int addNonTerminal(Production nonRecursive, Production recursive){
+        int newIndex = grammar.getNonTerminals().size();
+        grammar.addNonTerminal('X',newIndex ); 
+        Production newProduction = new Production(recursive);
+        for(int i = 0; i < recursive.getProduction().size(); i++){
+            Word newWord = new Word(recursive.getWord(i)); 
+            newWord.addElement(newIndex);
+            newProduction.addWord(newWord);
+        }
+        grammar.addProduction(newProduction);
+        return newIndex; 
+    }
+
+    public void alterPreviousProduction(int nTerminal, Production nonRecursive, int index){
+        // remove unnecesary words
+        for(int i = grammar.getProduction(nTerminal).getProduction().size() - 1; i >= 0 ; i-- ){
+            Word currentWord = grammar.getProduction(nTerminal).getWord(i); 
+            Object firstElement = currentWord.getElement(0); 
+            if(firstElement instanceof Integer){
+                if(nTerminal == (Integer)firstElement){
+                    grammar.getProduction(nTerminal).removeWord(i); 
+                }
+            }
+        }
+
+        // add new words 
+        for(int i = 0; i < nonRecursive.getProduction().size(); i++ ){
+            Word newWord = new Word(nonRecursive.getProduction().get(i));
+            newWord.addElement(index);
+            grammar.getProduction(nTerminal).addWord(newWord);
+        }
+
     }
 
 }
