@@ -13,6 +13,7 @@ public class Main{
             rules.put(leftNonTerminal, productionWords);
         }
         FNG fng = new FNG(rules);
+        System.out.println("\n\nGrammar after execution");
         System.out.println(fng.getGrammar());
 
     }

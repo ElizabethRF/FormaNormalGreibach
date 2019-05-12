@@ -22,9 +22,11 @@ public class FNG{
         grammar = new Grammar();
         entryNonTerminalMap = new HashMap<Character,Integer>();
         orderNonTerminals(initialGrammar);
-        System.out.println("original grammar");
+        System.out.println("grammar after step 1 ");
         System.out.println(grammar);
         fngCondition();
+        System.out.println("\n\ngrammar after step 2 ");
+        System.out.println(grammar);
     }
 
     public void orderNonTerminals(HashMap<Character,String[]> initialGrammar){
@@ -73,29 +75,19 @@ public class FNG{
 
     public void fngCondition(){
         for(int i = 0; i < grammar.getNonTerminals().size(); i++){
-            System.out.println("Evaluation of non terminal ");
             // for each non terminal validate i <= j 
             for(int j = 0 ; j < grammar.getProduction(i).getProduction().size();j++ ){
-                System.out.println("next index of word to evaluate " + j);
                 Object firstElement = grammar.getProduction(i).getWord(j).getElement(0); 
                 if(firstElement instanceof Integer){
                     if(i > (Integer)firstElement){
-                        System.out.println("Replace first Element i , j , (Integer)firstElement " + i+ " " +j+ " "+(Integer)firstElement ); 
                         replaceFirstElement(i,j,(Integer)firstElement);
                         j--; // if there is a replacement, we should evaluate the same index
                         
                     }
                 }
             }
-            /*
-            System.out.println("\n\n\nevaluation of nonterminal " + i);
-            System.out.println("new grammar  before deleting recursion");
-            System.out.println(grammar);
-            //For each non terminal delete left recursion 
-            System.out.println("Delete recursion"); */
+            
             deleteLeftRecursion(i);
-            /*System.out.println("new grammar ");
-            System.out.println(grammar);*/
         }
     }
 
@@ -109,7 +101,6 @@ public class FNG{
             grammar.getProduction(nTerminal).addWord(newWord);
         }
         grammar.getProduction(nTerminal).removeWord(wordIndex);
-        System.out.println("\nremove word at index" + wordIndex);
     }
 
     public void deleteLeftRecursion(int nTerminal){
