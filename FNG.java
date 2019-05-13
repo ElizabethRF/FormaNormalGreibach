@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 /*
     Paso 1: Ordenar no terminales
@@ -28,6 +29,7 @@ public class FNG{
         System.out.println("\n\ngrammar after step 2 ");
         System.out.println(grammar);
         finalReplacement(); 
+        deleteDuplicates();
     }
 
     public void orderNonTerminals(HashMap<Character,String[]> initialGrammar){
@@ -183,9 +185,25 @@ public class FNG{
                 }
             }
 
-            }
+        }
     }
 
+    public void deleteDuplicates(){
+        for(int i = grammar.getGrammar().size() - 1; i >= 0 ; i--){
+            Production actualProduction =  grammar.getProduction(i);
+            HashSet<String> productionElements = new HashSet<>();
+            for(int j = 0; j < actualProduction.getProduction().size(); j++){
+                Word currentWord = actualProduction.getWord(j);
+                if(productionElements.contains(currentWord.toString())){
+                    actualProduction.removeWord(j);
+                }
+                else{
+                    productionElements.add(currentWord.toString());
+                }
+            }
+
+        }
+    }
 
 
 }

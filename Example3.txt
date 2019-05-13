@@ -1,0 +1,3 @@
+S - ? | AA
+A - BB
+B - a | BB

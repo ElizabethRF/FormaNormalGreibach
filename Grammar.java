@@ -78,8 +78,8 @@ public class Grammar{
                     }
                     else{
                         NonTerminal temp = nonTerminals.get((Integer)letters.get(y));
-                        prod +=  " '"+ temp.getId();
-                        prod +=  temp.getIndex() + "' "; 
+                        prod +=  "'"+ temp.getId();
+                        prod +=  temp.getIndex() + "'"; 
                     }
                 }
                 prod += " | ";
