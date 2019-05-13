@@ -50,7 +50,12 @@ public class Word {
     public String toString(){
         String x = "";
         for(int i = 0 ; i<word.size(); i++){
-            x += word.get(i) + " "; 
+            if(word.get(i) instanceof Integer){
+                x += "X" + (Integer)word.get(i) + "X";
+            }
+            else{
+                x += word.get(i) + ""; 
+            }
         }
         return x; 
     }
