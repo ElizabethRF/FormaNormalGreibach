@@ -27,6 +27,7 @@ public class FNG{
         fngCondition();
         System.out.println("\n\ngrammar after step 2 ");
         System.out.println(grammar);
+        finalReplacement(); 
     }
 
     public void orderNonTerminals(HashMap<Character,String[]> initialGrammar){
@@ -166,5 +167,25 @@ public class FNG{
         }
 
     }
+
+    public void finalReplacement(){
+        for(int i = grammar.getGrammar().size() - 2; i >= 0 ; i--){
+            Production actualProduction =  grammar.getProduction(i);  
+            for(int j = 0; j < actualProduction.getProduction().size();j++){
+                Word currentWord = actualProduction.getWord(j); 
+                System.out.println("current word "+ currentWord); 
+                Object firstElement = currentWord.getElement(0); 
+                System.out.println("first element of current word "+ firstElement + " instance of " + firstElement.getClass()); 
+                if(firstElement instanceof Integer){
+                        replaceFirstElement(i, j, (Integer)firstElement);
+                        System.out.printf("\n\nReplace first element for production %d , for word %d , first element %d", i, j, (Integer)firstElement );
+                        j--; // decrease index as word replaced is removed from production 
+                }
+            }
+
+            }
+    }
+
+
 
 }
