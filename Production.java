@@ -9,12 +9,12 @@ public class Production{
 
     public Production(Production words){
         production = new ArrayList<Word>(); 
-        for(int i = 0; i < words.getProduction().size(); i++){
-            production.add(words.getProduction().get(i)); 
+        for(int i = 0; i < words.getWords().size(); i++){
+            production.add(words.getWords().get(i)); 
         }
     }
 
-    public ArrayList<Word> getProduction(){
+    public ArrayList<Word> getWords(){
         return production; 
     }
 

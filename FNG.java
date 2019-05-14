@@ -23,10 +23,10 @@ public class FNG{
         grammar = new Grammar();
         entryNonTerminalMap = new HashMap<Character,Integer>();
         orderNonTerminals(initialGrammar);
-        System.out.println("grammar after step 1 ");
+        System.out.println("\033[1mGrammar after step 1 \033[0m");
         System.out.println(grammar);
         fngCondition();
-        System.out.println("\n\ngrammar after step 2 ");
+        System.out.println("\n\n\033[1mGrammar after step 2 \033[0m");
         System.out.println(grammar);
         finalReplacement(); 
         deleteDuplicates();
@@ -79,7 +79,7 @@ public class FNG{
     public void fngCondition(){
         for(int i = 0; i < grammar.getNonTerminals().size(); i++){
             // for each non terminal validate i <= j 
-            for(int j = 0 ; j < grammar.getProduction(i).getProduction().size();j++ ){
+            for(int j = 0 ; j < grammar.getProduction(i).getWords().size();j++ ){
                 Object firstElement = grammar.getProduction(i).getWord(j).getElement(0); 
                 if(firstElement instanceof Integer){
                     if(i > (Integer)firstElement){
@@ -97,7 +97,7 @@ public class FNG{
     public void replaceFirstElement(int nTerminal, int wordIndex, int firstElement){
         Word alpha = new Word(grammar.getProduction(nTerminal).getWord(wordIndex));
         alpha.removeFirstElement(); 
-        ArrayList<Word> words = grammar.getProduction(firstElement).getProduction(); 
+        ArrayList<Word> words = grammar.getProduction(firstElement).getWords(); 
         for(int i = 0; i < words.size(); i++){
             Word newWord = new Word(alpha);
             newWord.addPrefix(words.get(i)); 
@@ -108,7 +108,7 @@ public class FNG{
 
     public void deleteLeftRecursion(int nTerminal){
         Production[] wordGroups = identifyRecursion(nTerminal);
-        if(wordGroups[1].getProduction().size() > 0){
+        if(wordGroups[1].getWords().size() > 0){
             int newIndex = addNonTerminal(wordGroups[0], wordGroups[1]);
             alterPreviousProduction(nTerminal,wordGroups[0], newIndex); 
         }
@@ -117,7 +117,7 @@ public class FNG{
     public Production[] identifyRecursion(int nTerminal){
         Production nonRecursive = new Production(); 
         Production recursive = new Production();
-        for(int i = 0 ; i < grammar.getProduction(nTerminal).getProduction().size(); i++ ){
+        for(int i = 0 ; i < grammar.getProduction(nTerminal).getWords().size(); i++ ){
             Word currentWord =  new Word(grammar.getProduction(nTerminal).getWord(i)); 
             Object firstElement = currentWord.getElement(0); 
             if(firstElement instanceof Integer){
@@ -140,7 +140,7 @@ public class FNG{
         int newIndex = grammar.getNonTerminals().size();
         grammar.addNonTerminal('X',newIndex ); 
         Production newProduction = new Production(recursive);
-        for(int i = 0; i < recursive.getProduction().size(); i++){
+        for(int i = 0; i < recursive.getWords().size(); i++){
             Word newWord = new Word(recursive.getWord(i)); 
             newWord.addElement(newIndex);
             newProduction.addWord(newWord);
@@ -151,7 +151,7 @@ public class FNG{
 
     public void alterPreviousProduction(int nTerminal, Production nonRecursive, int index){
         // remove unnecesary words
-        for(int i = grammar.getProduction(nTerminal).getProduction().size() - 1; i >= 0 ; i-- ){
+        for(int i = grammar.getProduction(nTerminal).getWords().size() - 1; i >= 0 ; i-- ){
             Word currentWord = grammar.getProduction(nTerminal).getWord(i); 
             Object firstElement = currentWord.getElement(0); 
             if(firstElement instanceof Integer){
@@ -162,8 +162,8 @@ public class FNG{
         }
 
         // add new words 
-        for(int i = 0; i < nonRecursive.getProduction().size(); i++ ){
-            Word newWord = new Word(nonRecursive.getProduction().get(i));
+        for(int i = 0; i < nonRecursive.getWords().size(); i++ ){
+            Word newWord = new Word(nonRecursive.getWords().get(i));
             newWord.addElement(index);
             grammar.getProduction(nTerminal).addWord(newWord);
         }
@@ -171,16 +171,13 @@ public class FNG{
     }
 
     public void finalReplacement(){
-        for(int i = grammar.getGrammar().size() - 2; i >= 0 ; i--){
+        for(int i = grammar.getProductions().size() - 2; i >= 0 ; i--){
             Production actualProduction =  grammar.getProduction(i);  
-            for(int j = 0; j < actualProduction.getProduction().size();j++){
+            for(int j = 0; j < actualProduction.getWords().size();j++){
                 Word currentWord = actualProduction.getWord(j); 
-                System.out.println("current word "+ currentWord); 
                 Object firstElement = currentWord.getElement(0); 
-                System.out.println("first element of current word "+ firstElement + " instance of " + firstElement.getClass()); 
                 if(firstElement instanceof Integer){
                         replaceFirstElement(i, j, (Integer)firstElement);
-                        System.out.printf("\n\nReplace first element for production %d , for word %d , first element %d", i, j, (Integer)firstElement );
                         j--; // decrease index as word replaced is removed from production 
                 }
             }
@@ -189,10 +186,10 @@ public class FNG{
     }
 
     public void deleteDuplicates(){
-        for(int i = grammar.getGrammar().size() - 1; i >= 0 ; i--){
+        for(int i = grammar.getProductions().size() - 1; i >= 0 ; i--){
             Production actualProduction =  grammar.getProduction(i);
             HashSet<String> productionElements = new HashSet<>();
-            for(int j = 0; j < actualProduction.getProduction().size(); j++){
+            for(int j = 0; j < actualProduction.getWords().size(); j++){
                 Word currentWord = actualProduction.getWord(j);
                 if(productionElements.contains(currentWord.toString())){
                     actualProduction.removeWord(j);

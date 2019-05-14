@@ -12,7 +12,7 @@ public class Grammar{
         productions = new ArrayList<Production>(); 
     }
 
-    public ArrayList<Production> getGrammar(){
+    public ArrayList<Production> getProductions(){
         return productions; 
     }
 
@@ -69,7 +69,7 @@ public class Grammar{
             prod += nonTerminals.get(i).getId();
             prod += nonTerminals.get(i).getIndex();
             prod += " -> ";
-            ArrayList<Word> words = productions.get(i).getProduction(); 
+            ArrayList<Word> words = productions.get(i).getWords(); 
             for(int j = 0; j < words.size(); j++){
                 ArrayList<Object> letters = words.get(j).getWord(); 
                 for(int y = 0; y < letters.size(); y++ ){
