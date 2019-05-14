@@ -1,6 +1,6 @@
 S - AS
-C - AB | D
-B - CC | D
-A - BC | CC | E
+C - AB | DD
+B - CC | DD
+A - BC | CC | EE
 D - b
 E - a 
