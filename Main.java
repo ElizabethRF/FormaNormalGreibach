@@ -13,7 +13,8 @@ public class Main{
             rules.put(leftNonTerminal, productionWords);
         }
         FNG fng = new FNG(rules);
-        System.out.println("\n\n\033[1mFNG\033[0m");
+        //System.out.println("\n\n\033[1mFNG\033[0m");
+        System.out.println("\nFNG\n");
         System.out.println(fng.getGrammar());
 
     }

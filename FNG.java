@@ -23,11 +23,11 @@ public class FNG{
         grammar = new Grammar();
         entryNonTerminalMap = new HashMap<Character,Integer>();
         orderNonTerminals(initialGrammar);
-        System.out.println("\033[1mGrammar after step 1 \033[0m");
-        System.out.println(grammar);
+        //System.out.println("\033[1mGrammar after step 1 \033[0m");
+        //System.out.println(grammar);
         fngCondition();
-        System.out.println("\n\n\033[1mGrammar after step 2 \033[0m");
-        System.out.println(grammar);
+        //System.out.println("\n\n\033[1mGrammar after step 2 \033[0m");
+        //System.out.println(grammar);
         finalReplacement(); 
         deleteDuplicates();
     }
